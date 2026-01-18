@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const BOT_TOKEN = ''; // вставить токен
+const token = process.env.BOT_TOKEN || 'fake_token';
 
 const REDIRECT_MAP: Record<string, string> = {
     "key_abc123": "https://target-happ.com/page1",
@@ -24,7 +24,7 @@ function verifyTelegramData(initData: string): boolean {
         .map(([key, value]) => `${key}=${value}`)
         .join('\n');
 
-    const secretKey = crypto.createHmac('sha256', 'WebAppData').update(BOT_TOKEN).digest();
+    const secretKey = crypto.createHmac('sha256', 'WebAppData').update(token).digest();
     const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
 
     return calculatedHash === hash;
